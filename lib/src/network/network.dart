@@ -1,1 +1,1 @@
-export 'google_places_endpoints.dart';
+export 'osm_api_client.dart';
