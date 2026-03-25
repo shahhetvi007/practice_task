@@ -2,16 +2,16 @@ import '../../../core/core.dart';
 import '../models/models.dart';
 import 'location_search_repository.dart';
 import 'current_location_data_source.dart';
-import 'google_places_remote_data_source.dart';
+import 'osm_remote_data_source.dart';
 import 'place_mapper.dart';
 
 class LocationSearchRepositoryImpl implements LocationSearchRepository {
   final CurrentLocationDataSource _locationDataSource;
-  final GooglePlacesRemoteDataSource _remoteDataSource;
+  final OsmRemoteDataSource _remoteDataSource;
 
   LocationSearchRepositoryImpl({
     required CurrentLocationDataSource locationDataSource,
-    required GooglePlacesRemoteDataSource remoteDataSource,
+    required OsmRemoteDataSource remoteDataSource,
   })  : _locationDataSource = locationDataSource,
         _remoteDataSource = remoteDataSource;
 
@@ -26,8 +26,8 @@ class LocationSearchRepositoryImpl implements LocationSearchRepository {
 
   @override
   Future<List<LocationPlace>> getNearbyLandmarks(LocationCoordinates coords) async {
-    final dtos = await _remoteDataSource.getNearbyLandmarks(coords);
-    return dtos.map(PlaceMapper.mapDetailsDtoToPlace).toList();
+    final results = await _remoteDataSource.getNearbyLandmarks(coords);
+    return results.map(PlaceMapper.mapOsmJsonToPlace).toList();
   }
 
   @override
@@ -35,13 +35,13 @@ class LocationSearchRepositoryImpl implements LocationSearchRepository {
     String query,
     LocationCoordinates? coords,
   ) async {
-    final suggestionsJson = await _remoteDataSource.autocomplete(query, coords);
-    return suggestionsJson.map(PlaceMapper.mapPredictionDtoToSuggestion).toList();
+    final results = await _remoteDataSource.autocomplete(query, coords);
+    return results.map(PlaceMapper.mapOsmJsonToSuggestion).toList();
   }
 
   @override
   Future<LocationPlace> getPlaceDetails(String placeId) async {
-    final dto = await _remoteDataSource.getPlaceDetails(placeId);
-    return PlaceMapper.mapDetailsDtoToPlace(dto);
+    final json = await _remoteDataSource.getPlaceDetails(placeId);
+    return PlaceMapper.mapOsmJsonToPlace(json);
   }
 }

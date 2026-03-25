@@ -1,19 +1,19 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/core.dart';
 import '../models/models.dart';
-import '../../../network/google_places_api_client.dart';
+import '../../../network/osm_api_client.dart';
 import 'current_location_data_source.dart';
-import 'google_places_remote_data_source.dart';
+import 'osm_remote_data_source.dart';
 import 'location_search_repository_impl.dart';
 
 part 'location_search_repository.g.dart';
 
 @riverpod
 LocationSearchRepository locationSearchRepository(LocationSearchRepositoryRef ref) {
-  final apiClient = ref.watch(googlePlacesApiClientProvider);
+  final apiClient = ref.watch(osmApiClientProvider);
   return LocationSearchRepositoryImpl(
     locationDataSource: CurrentLocationDataSource(),
-    remoteDataSource: GooglePlacesRemoteDataSource(apiClient),
+    remoteDataSource: OsmRemoteDataSource(apiClient),
   );
 }
 

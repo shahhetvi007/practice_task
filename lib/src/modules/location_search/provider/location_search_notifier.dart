@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/core.dart';
 import '../models/models.dart';
@@ -33,6 +34,11 @@ class LocationSearchController extends _$LocationSearchController {
 
       if (permission == LocationPermissionStatus.granted) {
         final coords = await _repository.getCurrentLocation();
+        
+        if (kDebugMode) {
+          print('CURRENT LOCATION: Lat: ${coords.latitude}, Lng: ${coords.longitude}');
+        }
+        
         state = state.copyWith(currentCoordinates: coords);
         await fetchNearbyLandmarks(coords);
       }
